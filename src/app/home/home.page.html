@@ -1,0 +1,134 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Length Unit Converter
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="display">
+          <ion-input id="inputLength" [(ngModel)]="input_length" type="number" placeholder="Length" readonly="true">
+          </ion-input>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div class="display_unit">{{current_unit1}}
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <div class="display">
+          <ion-item>
+            <ion-select class="selection" [(ngModel)]="current_unit2" cancelText="Cancel" okText="OK">
+              <ion-select-option *ngFor="let unit of unit;" [value]="unit">{{unit}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div class="display_unit">
+          <span id="outputLength" disabled="true"></span> {{current_unit2}}
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onUnitButtonClick('m')">m</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onACButtonClick()">AC</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onOperatorButtonClick('pow')">POW</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onOperatorButtonClick('sqrt')">SQRT</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="danger" (click)="onOperatorButtonClick('/')">/</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onUnitButtonClick('cm')">cm</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('7')">7</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('8')">8</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('9')">9</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="danger" (click)="onOperatorButtonClick('x')">x</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onUnitButtonClick('mm')">mm</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('4')">4</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('5')">5</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('6')">6</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="warning" (click)="onOperatorButtonClick('-')">-</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onUnitButtonClick('ft')">ft</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('1')">1</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('2')">2</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('3')">3</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="warning" (click)="onOperatorButtonClick('+')">+</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onUnitButtonClick('inch')">inch</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onNumberButtonClick('0')">0</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onDecimalButtonClick()">.</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="light" (click)="onAnsButtonClick()">Ans</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button shape="round" color="warning" (click)="onOperatorButtonClick('=')">=</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

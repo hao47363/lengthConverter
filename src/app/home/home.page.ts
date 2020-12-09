@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +11,7 @@ export class HomePage {
   inputLengthAfterDecimal = '0';
   prevLengthInput = '0';
   option: string;
-  unit: string[] = ['m', 'cm', 'mm', 'ft', 'inch'];
+  unit = ['m', 'cm', 'mm', 'ft', 'inch'];
   currentUnit = this.unit[1];
   convertedUnit = this.unit[0];
   result = 0;
@@ -22,41 +22,39 @@ export class HomePage {
   inputLengthCombinedInFloat = 0;
   operator: string;
   ans = 0;
+  @ViewChild('inputLength') inputLength: ElementRef;
+  @ViewChild('outputLength') outputLength: ElementRef;
 
-  constructor() { }
+  constructor(
+    private elementRef: ElementRef,
+    private renderer: Renderer2
+  ) { }
 
   @HostListener('keyup') lengthStandardize() {
     switch (this.currentUnit) {
       case 'm':
-        this.calculateinputLengthCombinedInFloat();
-        document.getElementById('inputLength').innerHTML = this.inputLengthCombinedInFloat.toString();
-        this.lengthConverter(this.inputLengthCombinedInFloat * 100.0);
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat * 100.0;
         break;
 
       case 'cm':
-        this.calculateinputLengthCombinedInFloat();
-        document.getElementById('inputLength').innerHTML = this.inputLengthCombinedInFloat.toString();
-        this.lengthConverter(this.inputLengthCombinedInFloat);
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat;
         break;
 
       case 'mm':
-        this.calculateinputLengthCombinedInFloat();
-        document.getElementById('inputLength').innerHTML = this.inputLengthCombinedInFloat.toString();
-        this.lengthConverter(this.inputLengthCombinedInFloat / 10.0);
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat / 10.0;
         break;
 
       case 'ft':
-        this.calculateinputLengthCombinedInFloat();
-        document.getElementById('inputLength').innerHTML = this.inputLengthCombinedInFloat.toString();
-        this.lengthConverter(this.inputLengthCombinedInFloat / 0.032808399);
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat / 0.032808399;
         break;
 
       case 'inch':
-        this.calculateinputLengthCombinedInFloat();
-        document.getElementById('inputLength').innerHTML = this.inputLengthCombinedInFloat.toString();
-        this.lengthConverter(this.inputLengthCombinedInFloat / 0.393700787);
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat / 0.393700787;
         break;
     }
+    this.calculateinputLengthCombinedInFloat();
+    this.inputLength.nativeElement = this.inputLengthCombinedInFloat.toString();
+    this.lengthConverter(this.inputLengthCombinedInFloat);
   }
 
   lengthStandardize2(val) {
@@ -87,42 +85,32 @@ export class HomePage {
     switch (this.convertedUnit) {
       case 'm':
         this.result = val / 100;
-        this.ans = this.result;
-        document.getElementById('outputLength').innerHTML = (this.result.toFixed(8)).toString();
         break;
 
       case 'cm':
         this.result = val;
-        this.ans = this.result;
-        document.getElementById('outputLength').innerHTML = (this.result.toFixed(8)).toString();
         break;
 
       case 'mm':
         this.result = val * 10.0;
-        this.ans = this.result;
-        document.getElementById('outputLength').innerHTML = (this.result.toFixed(8)).toString();
         break;
 
       case 'ft':
         this.result = val * 0.032808399;
-        this.ans = this.result;
-        document.getElementById('outputLength').innerHTML = (this.result.toFixed(8)).toString();
         break;
 
       case 'inch':
         this.result = val * 0.393700787;
-        this.ans = this.result;
-        document.getElementById('outputLength').innerHTML = (this.result.toFixed(8)).toString();
         break;
     }
-
+    this.ans = this.result;
+    this.outputLength.nativeElement = (this.result.toFixed(8)).toString();
   }
 
   onACButtonClick() {
     this.inputLengthBeforeDecimal = '0';
-    this.inputLengthAfterDecimal = '0';
-    document.getElementById('inputLength').innerHTML = this.inputLengthBeforeDecimal;
-    document.getElementById('outputLength').innerHTML = this.inputLengthBeforeDecimal;
+    this.inputLength.nativeElement = this.inputLengthBeforeDecimal;
+    this.outputLength.nativeElement = this.inputLengthBeforeDecimal;
     this.isNewNum = true;
     this.isDecimal = false;
     this.operator = '';
@@ -147,7 +135,7 @@ export class HomePage {
   }
 
   onAnsButtonClick() {
-    document.getElementById('outputLength').innerHTML = (this.ans.toFixed(2)).toString();
+    this.outputLength.nativeElement = (this.ans.toFixed(2)).toString();
   }
 
   onDecimalButtonClick() {
@@ -197,7 +185,8 @@ export class HomePage {
 
   calculateinputLengthCombinedInFloat() {
     this.inputLengthBeforeDecimalInFloat = parseFloat(this.inputLengthBeforeDecimal);
-    this.inputLengthAfterDecimalInFloat = (parseFloat(this.inputLengthAfterDecimal) / (Math.pow(10, (this.inputLengthAfterDecimal.length - 1))));
+    this.inputLengthAfterDecimalInFloat =
+      (parseFloat(this.inputLengthAfterDecimal) / (Math.pow(10, (this.inputLengthAfterDecimal.length - 1))));
     this.inputLengthCombinedInFloat = this.inputLengthBeforeDecimalInFloat + this.inputLengthAfterDecimalInFloat;
   }
 

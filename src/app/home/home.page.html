@@ -26,7 +26,7 @@
       <ion-col>
         <div class="display">
           <ion-item>
-            <ion-select class="selection" [(ngModel)]="convertedUnit" cancelText="Cancel" okText="OK">
+            <ion-select class="selection" [(ngModel)]="convertedUnit" cancelText="Cancel" (ionChange)="lengthStandardizeFinalAns()">
               <ion-select-option *ngFor="let unit of unit;" [value]="unit">{{unit}}</ion-select-option>
             </ion-select>
           </ion-item>
@@ -55,7 +55,7 @@
         <ion-button shape="round" color="light" (click)="onOperatorButtonClick('sqrt')">SQRT</ion-button>
       </ion-col>
       <ion-col>
-        <ion-button shape="round" color="danger" (click)="onOperatorButtonClick('/')">&divide;</ion-button>
+        <ion-button shape="round" color="warning" (click)="onOperatorButtonClick('/')">&divide;</ion-button>
       </ion-col>
     </ion-row>
 
@@ -73,7 +73,7 @@
         <ion-button shape="round" color="light" (click)="onNumberButtonClick('9')">9</ion-button>
       </ion-col>
       <ion-col>
-        <ion-button shape="round" color="danger" (click)="onOperatorButtonClick('x')">&times;</ion-button>
+        <ion-button shape="round" color="warning" (click)="onOperatorButtonClick('x')">&times;</ion-button>
       </ion-col>
     </ion-row>
 

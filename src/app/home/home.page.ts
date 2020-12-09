@@ -9,7 +9,8 @@ export class HomePage {
 
   inputLengthBeforeDecimal = '0';
   inputLengthAfterDecimal = '0';
-  prevLengthInput = '0';
+  firstLengthInput = '0';
+  secondLengthInput = '0';
   option: string;
   unit = ['m', 'cm', 'mm', 'ft', 'inch'];
   currentUnit = this.unit[1];
@@ -20,6 +21,7 @@ export class HomePage {
   inputLengthBeforeDecimalInFloat = 0;
   inputLengthAfterDecimalInFloat = 0;
   inputLengthCombinedInFloat = 0;
+  finalAnswer = '0';
   operator: string;
   ans = 0;
   @ViewChild('inputLength') inputLength: ElementRef;
@@ -52,31 +54,57 @@ export class HomePage {
         this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat / 0.393700787;
         break;
     }
-    this.calculateinputLengthCombinedInFloat();
+    this.calculateInputLengthCombinedInFloat();
     this.inputLength.nativeElement = this.inputLengthCombinedInFloat.toString();
     this.lengthConverter(this.inputLengthCombinedInFloat);
   }
 
-  lengthStandardize2(val) {
+  lengthStandardizeFinalAns() {
     switch (this.currentUnit) {
       case 'm':
-        this.inputLengthBeforeDecimal = (parseFloat(val) * 100).toString();
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat * 100.0;
         break;
 
       case 'cm':
-        this.inputLengthBeforeDecimal = this.inputLengthBeforeDecimal;
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat;
         break;
 
       case 'mm':
-        this.inputLengthBeforeDecimal = (parseFloat(val) / 10.0).toString();
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat / 10.0;
         break;
 
       case 'ft':
-        this.inputLengthBeforeDecimal = (parseFloat(val) / 0.032808399).toString();
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat / 0.032808399;
         break;
 
       case 'inch':
-        this.inputLengthBeforeDecimal = (parseFloat(val) / 0.393700787).toString();
+        this.inputLengthCombinedInFloat = this.inputLengthCombinedInFloat / 0.393700787;
+        break;
+    }
+    this.inputLength.nativeElement = this.inputLengthCombinedInFloat.toString();
+    this.lengthConverter(this.inputLengthCombinedInFloat);
+  }
+
+  lengthStandardizeCombinedValue(val) {
+    switch (this.currentUnit) {
+      case 'm':
+        this.inputLengthCombinedInFloat = val * 100;
+        break;
+
+      case 'cm':
+        this.inputLengthCombinedInFloat = val;
+        break;
+
+      case 'mm':
+        this.inputLengthCombinedInFloat = val / 10.0;
+        break;
+
+      case 'ft':
+        this.inputLengthCombinedInFloat = val / 0.032808399;
+        break;
+
+      case 'inch':
+        this.inputLengthCombinedInFloat = val / 0.393700787;
         break;
     }
   }
@@ -104,16 +132,19 @@ export class HomePage {
         break;
     }
     this.ans = this.result;
-    this.outputLength.nativeElement = (this.result.toFixed(8)).toString();
+    this.outputLength.nativeElement = (this.result.toFixed(4)).toString();
   }
 
   onACButtonClick() {
     this.inputLengthBeforeDecimal = '0';
-    this.inputLength.nativeElement = this.inputLengthBeforeDecimal;
-    this.outputLength.nativeElement = this.inputLengthBeforeDecimal;
+    this.inputLengthAfterDecimal = '0';
+    this.inputLength.nativeElement = '0';
+    this.outputLength.nativeElement = '0';
     this.isNewNum = true;
     this.isDecimal = false;
     this.operator = '';
+    this.firstLengthInput = '0';
+    this.secondLengthInput = '0';
   }
 
   onNumberButtonClick(num) {
@@ -135,12 +166,13 @@ export class HomePage {
   }
 
   onAnsButtonClick() {
-    this.outputLength.nativeElement = (this.ans.toFixed(2)).toString();
+    this.outputLength.nativeElement = (this.ans.toFixed(4)).toString();
   }
 
   onDecimalButtonClick() {
     if (this.isDecimal === false) {
       this.isDecimal = true;
+      this.inputLengthAfterDecimal = '0';
     } else {
       this.isDecimal = false;
     }
@@ -148,42 +180,40 @@ export class HomePage {
 
   onOperatorButtonClick(symbol) {
     if (symbol === '=') {
+      this.calculateInputLengthCombinedInFloat();
+      this.lengthStandardizeCombinedValue(this.inputLengthCombinedInFloat);
+      this.secondLengthInput = this.inputLengthCombinedInFloat.toString();
+      this.isDecimal = false;
       if (this.operator === '+') {
-        this.lengthStandardize2(this.inputLengthBeforeDecimal);
-        this.inputLengthBeforeDecimal = '' + (parseFloat(this.prevLengthInput) + parseFloat(this.inputLengthBeforeDecimal));
+        this.inputLengthBeforeDecimal = '' + (parseFloat(this.firstLengthInput) + parseFloat(this.secondLengthInput));
         this.currentUnit = this.unit[1];
-        this.lengthStandardize();
+        this.operator = '';
       } else if (this.operator === '-') {
-        this.lengthStandardize2(this.inputLengthBeforeDecimal);
-        this.inputLengthBeforeDecimal = '' + (parseFloat(this.prevLengthInput) - parseFloat(this.inputLengthBeforeDecimal));
+        this.inputLengthBeforeDecimal = '' + (parseFloat(this.firstLengthInput) - parseFloat(this.secondLengthInput));
         this.currentUnit = this.unit[1];
-        this.lengthStandardize();
+        this.operator = '';
       } else if (this.operator === 'x') {
-        this.lengthStandardize2(this.inputLengthBeforeDecimal);
-        this.inputLengthBeforeDecimal = '' + (parseFloat(this.prevLengthInput) * parseFloat(this.inputLengthBeforeDecimal));
-        this.currentUnit = this.unit[1];
-        this.lengthStandardize();
+        // TODO: multiply operation
       } else if (this.operator === '/') {
-        this.lengthStandardize2(this.inputLengthBeforeDecimal);
-        this.inputLengthBeforeDecimal = '' + (parseFloat(this.prevLengthInput) / parseFloat(this.inputLengthBeforeDecimal));
-        this.currentUnit = this.unit[1];
-        this.lengthStandardize();
+        // TODO: divide operation
       } else if (this.operator === 'pow') {
-        this.inputLengthBeforeDecimal = '' + Math.pow(parseFloat(this.prevLengthInput), 2);
-        this.lengthStandardize();
+        this.inputLengthBeforeDecimal = '' + Math.pow(parseFloat(this.firstLengthInput), 2);
       } else if (this.operator === 'sqrt') {
-        this.inputLengthBeforeDecimal = '' + Math.sqrt(parseFloat(this.prevLengthInput));
-        this.lengthStandardize();
+        this.inputLengthBeforeDecimal = '' + Math.sqrt(parseFloat(this.firstLengthInput));
       }
+      this.inputLengthCombinedInFloat = parseFloat(this.inputLengthBeforeDecimal);
+      this.lengthStandardizeFinalAns();
     } else {
       this.isNewNum = true;
-      this.lengthStandardize2(this.inputLengthBeforeDecimal);
-      this.prevLengthInput = this.inputLengthBeforeDecimal;
+      this.calculateInputLengthCombinedInFloat();
+      this.lengthStandardizeCombinedValue(this.inputLengthCombinedInFloat);
+      this.firstLengthInput = this.inputLengthCombinedInFloat.toString();
       this.operator = symbol;
+      this.isDecimal = false;
     }
   }
 
-  calculateinputLengthCombinedInFloat() {
+  calculateInputLengthCombinedInFloat() {
     this.inputLengthBeforeDecimalInFloat = parseFloat(this.inputLengthBeforeDecimal);
     this.inputLengthAfterDecimalInFloat =
       (parseFloat(this.inputLengthAfterDecimal) / (Math.pow(10, (this.inputLengthAfterDecimal.length - 1))));

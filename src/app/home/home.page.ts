@@ -237,7 +237,7 @@ export class HomePage {
   }
 
   isMultiplyOrDivide(symbol) {
-    if(symbol === 'x' || symbol === '/') {
+    if (symbol === 'x' || symbol === '/') {
       this.isSelectOptionDisabled = true;
     } else {
       this.isSelectOptionDisabled = false;

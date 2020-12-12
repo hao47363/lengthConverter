@@ -17,7 +17,7 @@
         </div>
       </ion-col>
       <ion-col>
-        <div class="display_unit"> {{ inputLength.nativeElement }} {{currentUnit}}
+        <div class="display_unit"> {{ inputLength.nativeElement }} {{ currentUnit }}
         </div>
       </ion-col>
     </ion-row>
@@ -26,7 +26,7 @@
       <ion-col>
         <div class="display">
           <ion-item>
-            <ion-select class="selection" [(ngModel)]="convertedUnit" cancelText="Cancel" (ionChange)="lengthStandardizeFinalAns()">
+            <ion-select class="selection" [(ngModel)]="convertedUnit" cancelText="Cancel" (ionChange)="lengthStandardizeFinalAns()" [disabled]="isSelectOptionDisabled">
               <ion-select-option *ngFor="let unit of unit;" [value]="unit">{{unit}}</ion-select-option>
             </ion-select>
           </ion-item>
@@ -34,7 +34,7 @@
       </ion-col>
       <ion-col>
         <div class="display_unit">
-          <ion-input id="outputLength" disabled="true" #outputLength></ion-input> {{ outputLength.nativeElement }} {{convertedUnit}}
+          <ion-input id="outputLength" disabled="true" #outputLength></ion-input> {{ outputLength.nativeElement }} {{ convertedUnit }}
         </div>
       </ion-col>
     </ion-row>

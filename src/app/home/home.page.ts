@@ -24,6 +24,7 @@ export class HomePage {
   finalAnswer = '0';
   operator: string;
   ans = 0;
+  isSelectOptionDisabled = false;
   @ViewChild('inputLength') inputLength: ElementRef;
   @ViewChild('outputLength') outputLength: ElementRef;
 
@@ -178,12 +179,14 @@ export class HomePage {
     }
   }
 
+  // TODO: fixing operation with decimal invovled
   onOperatorButtonClick(symbol) {
     if (symbol === '=') {
       this.calculateInputLengthCombinedInFloat();
       this.lengthStandardizeCombinedValue(this.inputLengthCombinedInFloat);
       this.secondLengthInput = this.inputLengthCombinedInFloat.toString();
       this.isDecimal = false;
+      this.isMultiplyOrDivide(this.operator);
       if (this.operator === '+') {
         this.inputLengthBeforeDecimal = '' + (parseFloat(this.firstLengthInput) + parseFloat(this.secondLengthInput));
         this.currentUnit = this.unit[1];
@@ -193,9 +196,17 @@ export class HomePage {
         this.currentUnit = this.unit[1];
         this.operator = '';
       } else if (this.operator === 'x') {
-        // TODO: multiply operation
+        console.log('First: ' + this.firstLengthInput);
+        console.log('Second: ' + this.secondLengthInput);
+        this.inputLengthBeforeDecimal = '' + (parseFloat(this.firstLengthInput) * parseFloat(this.secondLengthInput));
+        this.currentUnit = this.unit[1];
+        this.convertedUnit = this.currentUnit;
+        this.operator = '';
       } else if (this.operator === '/') {
-        // TODO: divide operation
+        this.inputLengthBeforeDecimal = '' + (parseFloat(this.firstLengthInput) / parseFloat(this.secondLengthInput));
+        this.currentUnit = this.unit[1];
+        this.convertedUnit = this.currentUnit;
+        this.operator = '';
       } else if (this.operator === 'pow') {
         this.inputLengthBeforeDecimal = '' + Math.pow(parseFloat(this.firstLengthInput), 2);
       } else if (this.operator === 'sqrt') {
@@ -203,6 +214,7 @@ export class HomePage {
       }
       this.inputLengthCombinedInFloat = parseFloat(this.inputLengthBeforeDecimal);
       this.lengthStandardizeFinalAns();
+      this.isNewNum = true;
     } else {
       this.isNewNum = true;
       this.calculateInputLengthCombinedInFloat();
@@ -224,4 +236,11 @@ export class HomePage {
     this.currentUnit = this.unit[this.unit.indexOf(unit)];
   }
 
+  isMultiplyOrDivide(symbol) {
+    if(symbol === 'x' || symbol === '/') {
+      this.isSelectOptionDisabled = true;
+    } else {
+      this.isSelectOptionDisabled = false;
+    }
+  }
 }
